@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    public static GameController instance;
+    public static GameController instance = null;
     public float scrollSpeed = -1.0f;
     public float spawnRate = 1.5f;
     public float speedExponent = 1.0f;
@@ -24,12 +24,21 @@ public class GameController : MonoBehaviour
     // Awake is called before Start
     void Awake()
     {
-        if (instance == null) {
-            instance = this;
-        } else if (instance != this)
+        if (instance != null)
         {
-            Destroy (gameObject);
+            Destroy(gameObject);
         }
+        else
+        {
+            instance = this;
+            GameObject.DontDestroyOnLoad(gameObject);
+        }
+        //if (instance == null) {
+        //    instance = this;
+        //} else if (instance != this)
+        //{
+        //    Destroy (gameObject);
+        //}
     }
 
     // Update is called once per frame
