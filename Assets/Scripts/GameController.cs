@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour
     public GameObject gameOverText;
     public AudioSource myAudio;
     public Text scoreText;
+    public bool newGame; //for all games after the first. This way you can just play right after reloading.
 
     private int score = 0;
     
@@ -31,7 +32,14 @@ public class GameController : MonoBehaviour
         else
         {
             instance = this;
-            GameObject.DontDestroyOnLoad(gameObject);
+            newGame = AudioScript.instance.newGame; //this object will always survive, so we call its newGame variable value.
+            if (newGame) //When we restart a new game we want to start immediately rather than waiting for a click.
+            {
+                gameOn = true;
+                tapToPlayText.SetActive(false);
+            }
+
+            //GameObject.DontDestroyOnLoad(gameObject);
         }
         //if (instance == null) {
         //    instance = this;
@@ -59,21 +67,25 @@ public class GameController : MonoBehaviour
             {
                 if (isDead)
                 {
-                    SceneManager.LoadScene(1);
+                    AudioScript.instance.StartNewGame(); //when we click we set NewGame to true in the object that will remain after the reset.
+                    SceneManager.LoadScene(0);
                 }
-            gameOn = true;
-            tapToPlayText.SetActive(false);
+                gameOn = true;
+                tapToPlayText.SetActive(false);
             }
         }
-        //@score    0 speedExponent = 1 (normal speed)
-        //@score 2000 speedExponent = 2 (twice as fast)
-        //@score [infinity] speedExponent = 3 (4x as fast)
-        speedExponent = (-1 / ((scoreDifficultyRatio * score) + 0.5f)) + 3;
+        else
+        {
+            //@score    0 speedExponent = 1 (normal speed)
+            //@score 2000 speedExponent = 2 (twice as fast)
+            //@score [infinity] speedExponent = 3 (4x as fast)
+            speedExponent = (-1 / ((scoreDifficultyRatio * score) + 0.5f)) + 3;
 
-        if (speedExponent < 1) {speedExponent = 1;}
-        if (speedExponent > 3) {speedExponent = 3;}
-        spawnRate = 1f + Mathf.Pow(0.5f, speedExponent);
-        scrollSpeed = -2.5f * (Mathf.Pow(2f, speedExponent));
+            if (speedExponent < 1) { speedExponent = 1; }
+            if (speedExponent > 3) { speedExponent = 3; }
+            spawnRate = 1f + Mathf.Pow(0.5f, speedExponent);
+            scrollSpeed = -2.5f * (Mathf.Pow(2f, speedExponent));
+        }
     }
 
     public void PlayerDied()

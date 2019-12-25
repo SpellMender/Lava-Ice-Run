@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class AudioScript : MonoBehaviour
 {
-     static AudioScript instance = null;
+    public static AudioScript instance = null;
+    public bool newGame = false;
  
      void Awake()
      {
@@ -18,4 +19,11 @@ public class AudioScript : MonoBehaviour
              GameObject.DontDestroyOnLoad(gameObject);
          }
      }
- }
+
+    public void StartNewGame()
+    {
+        newGame = true;
+    }
+
+
+}

@@ -14,22 +14,21 @@ public class ScrollingObject : MonoBehaviour
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
-        lastPosition = (Vector2) transform.position;
+        //lastPosition = (Vector2) transform.position;
         //rb2d.velocity = new Vector2(-scrollSpeed, 0);
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        rb2d.velocity = Vector2.zero;
         if (GameController.instance.gameOn)
         {
         rb2d.velocity = new Vector2(GameController.instance.scrollSpeed, 0);
-        lastPosition = (Vector2) transform.position;
         }
-        else
+        if (!GameController.instance.gameOn)
         {
-            transform.position = lastPosition;
-            lastPosition = (Vector2) transform.position;
+            rb2d.velocity = Vector2.zero;
         }
     }
 }
