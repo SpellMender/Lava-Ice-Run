@@ -3,8 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Block
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -41,19 +40,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Background
-    uniqueID: 2931341615
-    locked: 0
-  - name: Block Layer
-    uniqueID: 3021303187
-    locked: 0
-  - name: Player
-    uniqueID: 4177114317
-    locked: 0
-  - name: Ground
-    uniqueID: 1463539293
-    locked: 0
-  - name: Camera
-    uniqueID: 4120898341
     locked: 0

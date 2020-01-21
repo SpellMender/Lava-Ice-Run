@@ -6,8 +6,11 @@ public class AudioScript : MonoBehaviour
 {
     public static AudioScript instance = null;
     public bool newGame = false;
- 
-     void Awake()
+    public bool closing = false;
+    public int gameCt;
+    public string message = "new game loaded";
+
+    void Awake()
      {
          if (instance != null)
          {
@@ -20,10 +23,17 @@ public class AudioScript : MonoBehaviour
          }
      }
 
-    public void StartNewGame()
+    public void SetNewGame()
     {
         newGame = true;
     }
-
-
+    public void UnsetNewGame()
+    {
+        newGame = false;
+    }
+    public void addGameCt()
+    {
+        gameCt++;
+        gameCt = gameCt % 3;
+    }
 }
