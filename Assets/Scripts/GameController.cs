@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using GoogleMobileAds.Api;
+//using GoogleMobileAds.Api;
+using UnityEngine.Advertisements;
 //using AppBrainSdk;
 
 public class GameController : MonoBehaviour
@@ -28,7 +29,7 @@ public class GameController : MonoBehaviour
 
     private int score = 0;
     public int gameCt = 1;
-    private BannerView bannerView;
+    //private BannerView bannerView;
 
     // Awake is called before Start
     void Awake()
@@ -41,34 +42,47 @@ public class GameController : MonoBehaviour
         {
             instance = this;
 
-            newGame = AudioScript.instance.newGame; //this object will always survive, so we call its newGame variable value.
             gameCt = AudioScript.instance.gameCt;
+            newGame = AudioScript.instance.newGame; //this object will always survive, so we call its newGame variable value.
             if (newGame) //When we restart a new game we want to start immediately rather than waiting for a click.
             {
-                gameOn = true;
-                tapToPlayText.SetActive(false);
+                if (gameCt == 0)
+                {
+                    Advertisement.Show();
+                }
+                else
+                {
+                    gameOn = true;
+                }
             }
-            else MobileAds.Initialize("ca-app-pub-9178989598116738~8412340662"); //only needs to happen once | in this case, when the game first loads
+            else
+            {
+                    //MobileAds.Initialize("ca-app-pub-9178989598116738~8412340662"); //only needs to happen once | in this case, when the game first loads
+                    Advertisement.Initialize("3440683"); //has an overload bool to set test mode to true
+            }
         }
     }
 
     private void Start()
     {
         hiScoreText.text = "HI SCORE: " + PlayerPrefs.GetInt("hiScore", 0).ToString(); //the old high score is displayed or zero
-        this.RequestBanner();
+        //this.RequestBanner();
+        Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
+        Advertisement.Banner.Show("LavaBanner");
     }
 
-    private void RequestBanner()
-    {
-        string adUnitId = "ca-app-pub-9178989598116738/8302968955";
+    //private void RequestBanner()
+    //{
+    //    string adUnitId = "ca-app-pub-9178989598116738/8302968955";
 
-        // Create a 320x50 banner at the top of the screen.
-        this.bannerView = new BannerView(adUnitId, AdSize.Banner, AdPosition.Bottom);
-    }
+    //    // Create a 320x50 banner at the top of the screen.
+    //    this.bannerView = new BannerView(adUnitId, AdSize.Banner, AdPosition.Bottom);
+    //}
 
     // Update is called once per frame
     void Update()
     {
+
         if (Input.GetKey("escape"))
         {
             Exit();
@@ -93,12 +107,15 @@ public class GameController : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(0))
             {
-                //literally skips a frame to make sure we're not trying to close the app
-                if (!closingCheck)
+                if (!Advertisement.isShowing)
                 {
-                    print("click received");
-                    closingCheck = true;
-                    return;
+                    //literally skips a frame to make sure we're not trying to close the app
+                    if (!closingCheck)
+                    {
+                        print("click received");
+                        closingCheck = true;
+                        return;
+                    }
                 }
             }
         }
@@ -158,6 +175,8 @@ public class GameController : MonoBehaviour
         //    print("interstitial load");
         //    MyInterstitial.instance.OnLevelComplete();
         //}
+
+        //Advertisement.Banner.Hide(true); //Hides and destroys the banner?
 
         AudioScript.instance.addGameCt();
         AudioScript.instance.SetNewGame(); //We set NewGame to true in the object that will remain after the reset.

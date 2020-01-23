@@ -7,7 +7,7 @@ public class AudioScript : MonoBehaviour
     public static AudioScript instance = null;
     public bool newGame = false;
     public bool closing = false;
-    public int gameCt;
+    public int gameCt = 1;
     public string message = "new game loaded";
 
     void Awake()
